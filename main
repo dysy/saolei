@@ -1,0 +1,62 @@
+#梅开三度（？）的扫雷
+
+import random as r
+import time as t
+
+def prin(lis):
+    a=len(lis)
+    for i in range(a):
+        pri=str(lis[i][0])
+        for j in range(a-1):
+            pri+=', '+str(lis[i][j+1])
+        print(pri)
+    return
+
+#创建地雷场地(ground)的函数，这个场地是0和1
+def setup(a):
+    ground=[[0 for i in range(a)] for i in range(a)]
+    bombnum=10
+    x=0
+    y=0
+    while bombnum!=0:
+        pos=r.randint(1,100)
+        if pos<=5 and ground[y][x]==0:
+            ground[y][x]=1
+            bombnum-=1
+        x+=1
+        if x==a:
+            x=0
+            y+=1
+            if y==a:
+                y=0
+    return ground
+
+#标记数目的函数
+def sign(ground):
+    a=len(ground)
+    signed=[[0 for i in range(a)] for i in range(a)]
+    for x0 in range(a):
+        for y0 in range(a):
+            #当这个格子不是雷的时候
+            if ground[y0][x0]==0:
+                for i in range(3):
+                    for j in range(3):
+                        xt=x0-1+i
+                        yt=y0-1+j
+                        if xt>=0 and xt<=a-1 and yt>=0 and yt<=a-1:
+                            if i!=1 or j!=1:
+                                if ground[yt][xt]==1:
+                                    signed[y0][x0]+=1
+            #当这个格子是雷(Mine)的时候
+            else:
+                signed[y0][x0]='M'
+    return signed
+
+#方便起见来搞个方便测试的函数
+def test():
+    ground=setup(9)
+    signed=sign(ground)
+    prin(ground)
+    print()
+    prin(signed)
+    return
